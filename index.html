@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+</head>
+
+<body>
+  <div id="app">
+    <table :key="counter">
+      <tr v-for="(line, lineId) in words" :key="lineId">
+        <td v-for="(row, rowId) in line" :key="rowId"
+        :class="{'is-selected': selected[lineId][rowId]}"
+        @click="click(lineId, rowId)">
+          <span>{{row}}</span>
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <script>
+    var app = new Vue({
+      el: '#app',
+      data: {
+        message: 'Hello Vue!',
+        words: [["-/-","-/-","-/-","-/-"],["-/-","-/-","-/-","-/-"],["-/-","-/-","-/-","-/-"],["-/-","-/-","-/-","-/-"]],
+        selected: [[false,false,false,false],[false,false,false,false],[false,false,false,false],[false,false,false,false]],
+        counter: 0,
+        wordlist: [
+          "Big Data",
+          "Artificial Intelligence (AI)",
+          "Machine Learning",
+          "Augmented Reality (AR)",
+          "Virtual Reality (VR)",
+          "Internet Of Things (IoT)",
+          "Industrial Internet Of Things (IIoT)",
+          "Tenant",
+          "Mobile Network / 3G / 4G /5G",
+          "Agent",
+          "On-premises",
+          "KPI",
+          "ROI",
+          "AWS",
+          "Azure",
+          "Alibaba Cloud",
+          "granular",
+          "MQTT",
+          "OPC (UA)",
+          "Dashboard",
+          "Apps",
+          "Low Code",
+          "Time Series Data",
+          "Influx DB",
+          "Grafana",
+          "Security",
+          "Industry PC",
+          "Downtime",
+          "Edge",
+          "Gateway",
+          "Mongo DB",
+          "Use Case",
+          "Raspberry Pi",
+          "Predictive Maintenance",
+          "Platform as a Service (PaaS)",
+          "Infrastructure as a Service (IaaS)",
+          "Software as a Service (SaaS)",
+          "Win-Win",
+          "Datalake",
+          "Anonym",
+          "Standards"
+        ]
+      },
+      created: function() {
+        for (let line = 0; line < 4; line++) {
+          for (let row = 0; row < 4; row++) {
+            let w = this.wordlist.splice(parseInt(Math.random() * this.wordlist.length), 1)
+            this.words[line][row] = w[0]
+          }
+        }
+      },
+      methods: {
+        click: function(lineId, rowId) {
+          this.selected[lineId][rowId] = !this.selected[lineId][rowId];
+          this.counter++;
+        }
+      }
+    })
+  </script>
+
+  <style>
+    td {
+      border: solid 1px;
+      width: 100px;
+      height: 100px;
+    }
+
+    .is-selected {
+      background-color: grey;
+    }
+  </style>
+</body>
+
+</html>

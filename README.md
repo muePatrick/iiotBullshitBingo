@@ -1,0 +1,1 @@
+Mein Bullshit Bingo, welches ich in einer IIoT Präsentation hingerozt habe.
