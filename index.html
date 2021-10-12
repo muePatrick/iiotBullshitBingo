@@ -8,11 +8,12 @@
   <title>Document</title>
 
   <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.4.0/dist/confetti.browser.min.js"></script>
 </head>
 
 <body>
   <div id="app">
-    <table :key="counter">
+    <table :key="counter" ref="table">
       <tr v-for="(line, lineId) in words" :key="lineId">
         <td v-for="(row, rowId) in line" :key="rowId" :class="{'is-selected': selected[lineId][rowId]}"
           @click="click(lineId, rowId)">
@@ -22,7 +23,8 @@
     </table>
     <label for="wordlistKey">Choose a category:</label>
     <select name="wordlistKey" id="wordlistKey" v-model="selectedWordlist" @change="generateData">
-      <option v-for="(key, keyId) in Object.keys(wordlist)" :value="key" :key="keyId" @click="generateData(key)">{{key}}</option>
+      <option v-for="(key, keyId) in Object.keys(wordlist)" :value="key" :key="keyId" @click="generateData(key)">{{key}}
+      </option>
     </select>
     <button @click="generateData">Recreate</button>
   </div>
@@ -88,8 +90,43 @@
       },
       methods: {
         click: function (lineId, rowId) {
-          this.selected[lineId][rowId] = !this.selected[lineId][rowId];
-          this.counter++;
+          this.selected[lineId][rowId] = !this.selected[lineId][rowId]
+          this.counter++
+          // Horizontal Win
+          this.selected.forEach(s => {
+            if (s[0] && s[1] && s[2] && s[3]) {
+              this.party()
+              return
+            }
+          });
+          // Vertical Win
+          for (let index = 0; index < 4; index++) {
+            if (this.selected[0][index] && this.selected[1][index] && this.selected[2][index] && this.selected[3][index]) {
+              this.party()
+              return
+            }
+          }
+          // Diagonal Win
+          if (this.selected[0][0] && this.selected[1][1] && this.selected[2][2] && this.selected[3][3]) {
+            this.party()
+            return
+          }
+          if (this.selected[3][0] && this.selected[2][1] && this.selected[1][2] && this.selected[0][3]) {
+            this.party()
+            return
+          }
+        },
+        party: function () {
+          let table = this.$refs.table.getBoundingClientRect()
+          confetti({
+            particleCount: 150,
+            startVelocity: 25,
+            angle: 270,
+            origin: {
+              x: (table.left + (table.width / 2)) / document.body.clientWidth,
+              y: -0.1
+            }
+          });
         },
         generateData: function () {
           this.selected = [[false, false, false, false], [false, false, false, false], [false, false, false, false], [false, false, false, false]]
