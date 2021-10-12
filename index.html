@@ -14,13 +14,17 @@
   <div id="app">
     <table :key="counter">
       <tr v-for="(line, lineId) in words" :key="lineId">
-        <td v-for="(row, rowId) in line" :key="rowId"
-        :class="{'is-selected': selected[lineId][rowId]}"
-        @click="click(lineId, rowId)">
+        <td v-for="(row, rowId) in line" :key="rowId" :class="{'is-selected': selected[lineId][rowId]}"
+          @click="click(lineId, rowId)">
           <span>{{row}}</span>
         </td>
       </tr>
     </table>
+    <label for="wordlistKey">Choose a category:</label>
+    <select name="wordlistKey" id="wordlistKey" v-model="selectedWordlist" @change="generateData">
+      <option v-for="(key, keyId) in Object.keys(wordlist)" :value="key" :key="keyId" @click="generateData(key)">{{key}}</option>
+    </select>
+    <button @click="generateData">Recreate</button>
   </div>
 
   <script>
@@ -28,64 +32,76 @@
       el: '#app',
       data: {
         message: 'Hello Vue!',
-        words: [["-/-","-/-","-/-","-/-"],["-/-","-/-","-/-","-/-"],["-/-","-/-","-/-","-/-"],["-/-","-/-","-/-","-/-"]],
-        selected: [[false,false,false,false],[false,false,false,false],[false,false,false,false],[false,false,false,false]],
+        words: [["-/-", "-/-", "-/-", "-/-"], ["-/-", "-/-", "-/-", "-/-"], ["-/-", "-/-", "-/-", "-/-"], ["-/-", "-/-", "-/-", "-/-"]],
+        selected: [[false, false, false, false], [false, false, false, false], [false, false, false, false], [false, false, false, false]],
         counter: 0,
-        wordlist: [
-          "Big Data",
-          "Artificial Intelligence (AI)",
-          "Machine Learning",
-          "Augmented Reality (AR)",
-          "Virtual Reality (VR)",
-          "Internet Of Things (IoT)",
-          "Industrial Internet Of Things (IIoT)",
-          "Tenant",
-          "Mobile Network / 3G / 4G /5G",
-          "Agent",
-          "On-premises",
-          "KPI",
-          "ROI",
-          "AWS",
-          "Azure",
-          "Alibaba Cloud",
-          "granular",
-          "MQTT",
-          "OPC (UA)",
-          "Dashboard",
-          "Apps",
-          "Low Code",
-          "Time Series Data",
-          "Influx DB",
-          "Grafana",
-          "Security",
-          "Industry PC",
-          "Downtime",
-          "Edge",
-          "Gateway",
-          "Mongo DB",
-          "Use Case",
-          "Raspberry Pi",
-          "Predictive Maintenance",
-          "Platform as a Service (PaaS)",
-          "Infrastructure as a Service (IaaS)",
-          "Software as a Service (SaaS)",
-          "Win-Win",
-          "Datalake",
-          "Anonym",
-          "Standards"
-        ]
-      },
-      created: function() {
-        for (let line = 0; line < 4; line++) {
-          for (let row = 0; row < 4; row++) {
-            let w = this.wordlist.splice(parseInt(Math.random() * this.wordlist.length), 1)
-            this.words[line][row] = w[0]
-          }
+        selectedWordlist: "Cloud / (I)Iot",
+        wordlist: {
+          "Cloud / (I)Iot": [
+            "Big Data",
+            "Artificial Intelligence (AI)",
+            "Machine Learning",
+            "Augmented Reality (AR)",
+            "Virtual Reality (VR)",
+            "Internet Of Things (IoT)",
+            "Industrial Internet Of Things (IIoT)",
+            "Tenant",
+            "Mobile Network / 3G / 4G /5G",
+            "Agent",
+            "On-premises",
+            "KPI",
+            "ROI",
+            "AWS",
+            "Azure",
+            "Alibaba Cloud",
+            "granular",
+            "MQTT",
+            "OPC (UA)",
+            "Dashboard",
+            "Apps",
+            "Low Code",
+            "Time Series Data",
+            "Influx DB",
+            "Grafana",
+            "Security",
+            "Industry PC",
+            "Downtime",
+            "Edge",
+            "Gateway",
+            "Mongo DB",
+            "Use Case",
+            "Raspberry Pi",
+            "Predictive Maintenance",
+            "Platform as a Service (PaaS)",
+            "Infrastructure as a Service (IaaS)",
+            "Software as a Service (SaaS)",
+            "Win-Win",
+            "Datalake",
+            "Anonym",
+            "Standards",
+            "Mircoservice",
+          ]
         }
       },
+      created: function () {
+        this.generateData()
+      },
       methods: {
-        click: function(lineId, rowId) {
+        click: function (lineId, rowId) {
           this.selected[lineId][rowId] = !this.selected[lineId][rowId];
+          this.counter++;
+        },
+        generateData: function () {
+          this.selected = [[false, false, false, false], [false, false, false, false], [false, false, false, false], [false, false, false, false]]
+          let key = this.selectedWordlist
+          let localWordlist = [...this.wordlist[key]]
+          console.log("Generating Bingo from " + key)
+          for (let line = 0; line < 4; line++) {
+            for (let row = 0; row < 4; row++) {
+              let w = localWordlist.splice(parseInt(Math.random() * localWordlist.length), 1)
+              this.words[line][row] = w[0]
+            }
+          }
           this.counter++;
         }
       }
